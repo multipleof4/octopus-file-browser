@@ -1,1 +1,2 @@
 - Do not edit or create .md files unless told.
+- Env var NPM_TOKEN is available for publishing to npm.
