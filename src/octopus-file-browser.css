@@ -1,0 +1,91 @@
+:host {
+  --ofb-border: #d0d7de;
+  --ofb-text: #181c21;
+  --ofb-muted: #57606a;
+  --ofb-link: #1f2328;
+  --ofb-folder: #54aeff;
+  --ofb-hover: #f6f8fa;
+  --ofb-focus: #0969da;
+  --ofb-recent: #d15700;
+  color: var(--ofb-text);
+  display: block;
+  font: 14px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  min-width: 0;
+}
+
+* { box-sizing: border-box; }
+
+.list {
+  border: 1px solid var(--ofb-border);
+  border-radius: 5px;
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.entry {
+  appearance: none;
+  background: #fff;
+  border: 0;
+  border-top: 1px solid var(--ofb-border);
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  margin: 0;
+  min-height: 37px;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+li:first-child .entry { border-top: 0; }
+.entry:hover { background: var(--ofb-hover); }
+.entry:active { background: #eef1f4; }
+.entry:focus-visible { box-shadow: inset 0 0 0 2px var(--ofb-focus); outline: 0; }
+
+.cell {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+  padding: 8px 10px;
+}
+
+.name { gap: 8px; }
+.icon { flex: 0 0 auto; height: 18px; object-fit: contain; width: 18px; }
+.label, .modified { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.label { color: var(--ofb-link); min-width: 0; }
+.size {
+  color: var(--ofb-muted);
+  flex: 0 0 auto;
+  font-size: 12px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+.modified { color: var(--ofb-muted); }
+.modified.recent { color: var(--ofb-recent); }
+.modified { justify-content: flex-end; }
+
+.empty {
+  color: var(--ofb-muted);
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .entry {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    min-height: 44px;
+  }
+  .cell { padding: 10px 8px; }
+  .name { gap: 7px; }
+  .icon { height: 17px; width: 17px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .entry { transition: background-color 80ms ease; }
+}

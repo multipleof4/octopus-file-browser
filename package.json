@@ -1,0 +1,40 @@
+{
+  "name": "octopus-file-browser",
+  "version": "0.1.0",
+  "description": "A compact, framework-free file browser inspired by Gitea's repository view.",
+  "type": "module",
+  "main": "./dist/octopus-file-browser.umd.cjs",
+  "module": "./dist/octopus-file-browser.js",
+  "exports": {
+    ".": {
+      "import": "./dist/octopus-file-browser.js",
+      "require": "./dist/octopus-file-browser.umd.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "THIRD_PARTY_NOTICES"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test",
+    "demo": "vite build",
+    "build:demo": "npm run demo",
+    "build:library": "vite build --config vite.lib.config.js",
+    "build": "npm run build:demo && npm run build:library",
+    "check": "npm test && npm run build"
+  },
+  "keywords": [
+    "file-browser",
+    "web-component",
+    "javascript",
+    "gitea"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "material-icon-theme": "5.38.1"
+  },
+  "devDependencies": {
+    "vite": "8.3.0"
+  }
+}
