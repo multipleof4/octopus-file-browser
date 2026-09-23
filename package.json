@@ -5,14 +5,18 @@
   "type": "module",
   "main": "./dist/octopus-file-browser.umd.cjs",
   "module": "./dist/octopus-file-browser.js",
+  "types": "./octopus-file-browser.d.ts",
   "exports": {
     ".": {
+      "types": "./octopus-file-browser.d.ts",
       "import": "./dist/octopus-file-browser.js",
       "require": "./dist/octopus-file-browser.umd.cjs"
     }
   },
   "files": [
     "dist",
+    "octopus-file-browser.d.ts",
+    "LICENSE",
     "THIRD_PARTY_NOTICES"
   ],
   "scripts": {
@@ -30,11 +34,17 @@
     "javascript",
     "gitea"
   ],
-  "license": "UNLICENSED",
-  "dependencies": {
-    "material-icon-theme": "5.38.1"
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multipleof4/octopus-file-browser.git"
   },
+  "homepage": "https://github.com/multipleof4/octopus-file-browser#readme",
+  "bugs": "https://github.com/multipleof4/octopus-file-browser/issues",
+  "funding": "https://github.com/sponsors/multipleof4",
+  "publishConfig": { "access": "public" },
   "devDependencies": {
+    "material-icon-theme": "5.38.1",
     "vite": "8.3.0"
   }
 }
