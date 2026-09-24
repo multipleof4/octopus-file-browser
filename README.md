@@ -1,3 +1,5 @@
+https://www.npmjs.com/package/octopus-file-browser
+
 <p align="center">
   <img src="docs/ofb.png" width="112" alt="Octopus File Browser logo">
 </p>
