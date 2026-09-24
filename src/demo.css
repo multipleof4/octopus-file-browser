@@ -15,3 +15,10 @@ main {
 @media (max-width: 640px) {
   main { padding: 8px; }
 }
+
+.demo-status {
+  color: #57606a;
+  font-size: 13px;
+  margin: 8px 2px 0;
+  min-height: 20px;
+}

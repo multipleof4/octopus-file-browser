@@ -7,6 +7,7 @@
   --ofb-hover: #f6f8fa;
   --ofb-focus: #0969da;
   --ofb-recent: #d15700;
+  --ofb-danger: #cf222e;
   color: var(--ofb-text);
   display: block;
   font: 14px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
@@ -39,6 +40,9 @@
   min-height: 37px;
   padding: 0;
   text-align: left;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
   width: 100%;
 }
 
@@ -74,6 +78,48 @@ li:first-child .entry { border-top: 0; }
   margin: 0;
   padding: 24px;
   text-align: center;
+}
+
+.menu {
+  background: #fff;
+  border: 1px solid var(--ofb-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(140, 149, 159, 0.25);
+  color: var(--ofb-text);
+  font: inherit;
+  inset: auto;
+  margin: 0;
+  max-height: calc(100vh - 8px);
+  max-width: min(280px, calc(100vw - 8px));
+  min-width: 180px;
+  overflow-y: auto;
+  padding: 4px;
+  position: fixed;
+  z-index: 2147483647;
+}
+
+.menu-item {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  overflow: hidden;
+  padding: 6px 10px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.menu-item:hover, .menu-item:focus-visible { background: var(--ofb-hover); outline: 0; }
+.menu-item.danger { color: var(--ofb-danger); }
+
+@media (pointer: coarse) {
+  .menu-item { padding: 11px 12px; }
 }
 
 @media (max-width: 640px) {

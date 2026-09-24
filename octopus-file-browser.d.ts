@@ -13,6 +13,13 @@ export interface OctopusOpenDetail {
   path: string[];
 }
 
+export interface OctopusMenuItem {
+  label: string;
+  action: (entry: OctopusEntry, path: string[]) => void;
+  when?: (entry: OctopusEntry, path: string[]) => boolean;
+  danger?: boolean;
+}
+
 export interface OctopusNavigateDetail {
   path: string[];
 }
@@ -25,6 +32,7 @@ export interface OctopusFileBrowserEventMap {
 export class OctopusFileBrowser extends HTMLElement {
   entries: OctopusEntry[];
   path: string[];
+  contextMenu: OctopusMenuItem[];
   addEventListener<K extends keyof OctopusFileBrowserEventMap>(
     type: K,
     listener: (this: OctopusFileBrowser, event: OctopusFileBrowserEventMap[K]) => void,
@@ -39,7 +47,7 @@ export class OctopusFileBrowser extends HTMLElement {
 
 export function createOctopusFileBrowser(
   target: Element,
-  options?: { entries?: OctopusEntry[]; path?: string[]; emptyLabel?: string },
+  options?: { entries?: OctopusEntry[]; path?: string[]; contextMenu?: OctopusMenuItem[]; emptyLabel?: string },
 ): OctopusFileBrowser;
 
 export function fileKindLabel(name?: string): string;

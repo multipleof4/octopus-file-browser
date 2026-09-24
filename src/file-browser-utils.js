@@ -52,3 +52,7 @@ export function fileKindLabel(name = '') {
     png: 'Image', svg: 'SVG', yml: 'YAML', yaml: 'YAML', ts: 'TypeScript',
   })[extension] || (extension ? extension.toUpperCase() : 'File');
 }
+
+export function menuItemsFor(items = [], entry, path) {
+  return items.filter((item) => !item.when || item.when(entry, path));
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fileKindLabel, formatFileSize, formatRelativeDate, isRecent, sortEntries } from '../src/file-browser-utils.js';
+import { fileKindLabel, formatFileSize, formatRelativeDate, isRecent, menuItemsFor, sortEntries } from '../src/file-browser-utils.js';
 
 test('sortEntries keeps folders first and names natural', () => {
   const sorted = sortEntries([
@@ -35,4 +35,16 @@ test('fileKindLabel identifies special and common files', () => {
   assert.equal(fileKindLabel('LICENSE'), 'License');
   assert.equal(fileKindLabel('app.js'), 'JavaScript');
   assert.equal(fileKindLabel('Dockerfile'), 'File');
+});
+
+test('menuItemsFor keeps items whose when() matches the entry', () => {
+  const items = [
+    { label: 'All' },
+    { label: 'Folders', when: (entry) => entry.type === 'directory' },
+    { label: 'JSON', when: (entry, path) => entry.name.endsWith('.json') && path.length === 2 },
+  ];
+  const labels = (entry, path) => menuItemsFor(items, entry, path).map(({ label }) => label);
+  assert.deepEqual(labels({ name: 'src', type: 'directory' }, ['src']), ['All', 'Folders']);
+  assert.deepEqual(labels({ name: 'a.json', type: 'file' }, ['src', 'a.json']), ['All', 'JSON']);
+  assert.deepEqual(menuItemsFor(undefined, { name: 'a', type: 'file' }, ['a']), []);
 });
