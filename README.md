@@ -23,25 +23,22 @@ npm install octopus-file-browser
   import 'octopus-file-browser';
 
   const browser = document.querySelector('octopus-file-browser');
-  browser.entries = [
-    {
-      name: 'src',
-      type: 'directory',
-      modified: '2026-09-23T17:00:00Z',
-      children: [
-        { name: 'app.js', type: 'file', size: 1842, modified: '2026-09-23T17:00:00Z' },
-      ],
-    },
-    { name: 'package.json', type: 'file', size: 986, modified: '2026-09-22T09:30:00Z' },
-  ];
 
-  browser.addEventListener('octopus:open', ({ detail }) => {
-    console.log(detail.path, detail.entry);
-  });
+  async function open(path) {
+    const response = await fetch(`/api/ls?path=${encodeURIComponent('/' + path.join('/'))}`);
+    const entries = await response.json();
+    browser.path = path;
+    browser.entries = entries;
+  }
+
+  browser.addEventListener('octopus:navigate', ({ detail }) => open(detail.path));
+  browser.addEventListener('octopus:open', ({ detail }) => console.log(detail.path, detail.entry));
+
+  open([]);
 </script>
 ```
 
-Importing the package registers `<octopus-file-browser>`. Directories navigate automatically; selecting a file emits `octopus:open`.
+Importing the package registers `<octopus-file-browser>`. The browser displays one directory at a time: your app sets `path` and that directory's `entries`. Selecting a directory or `..` emits `octopus:navigate` with the requested path, and your app loads that directory and sets both again. Selecting a file emits `octopus:open`.
 
 ## Entry data
 
@@ -51,7 +48,6 @@ Importing the package registers `<octopus-file-browser>`. Directories navigate a
 | `type` | `"file" \| "directory"` | Entry kind. |
 | `size` | `number` | File size in bytes. |
 | `modified` | `Date \| string \| number` | Modified time. |
-| `children` | `OctopusEntry[]` | Directory contents. |
 | `icon` | `string` | Optional custom icon URL. |
 
 Directories are sorted before files. Names use natural, case-insensitive sorting.
@@ -60,12 +56,11 @@ Directories are sorted before files. Names use natural, case-insensitive sorting
 
 | API | Description |
 | --- | --- |
-| `browser.entries` | Gets or replaces the root entry array and returns to root. |
-| `browser.path` | Current directory path as a new array. |
-| `browser.navigate(path)` | Navigates to a directory path, for example `['src', 'assets']`. |
+| `browser.entries` | Gets or replaces the current directory's entries. |
+| `browser.path` | Gets or sets the current directory path, for example `['home', 'ubuntu']`. `..` is shown when it is not empty. |
 | `empty-label` | Attribute controlling the empty-directory message. |
 | `octopus:open` | Event with `{ entry, path }` when a file is selected. |
-| `octopus:navigate` | Event with `{ entries, path }` after navigation. |
+| `octopus:navigate` | Event with `{ path }` when a directory or `..` is selected. The browser does not change until your app sets `path` and `entries`. |
 
 The package also exports `OctopusFileBrowser`, `createOctopusFileBrowser`, `sortEntries`, `formatFileSize`, `formatRelativeDate`, `isRecent`, and `fileKindLabel`. Type declarations are included.
 

@@ -27,40 +27,25 @@ export class OctopusFileBrowser extends HTMLElementBase {
 
   set entries(value) {
     this.#entries = Array.isArray(value) ? value : [];
-    this.#path = [];
     this.#render();
   }
 
   get entries() { return this.#entries; }
-  get path() { return [...this.#path]; }
 
-  navigate(path = []) {
-    let entries = this.#entries;
-    const valid = [];
-    for (const part of path) {
-      const directory = entries.find((entry) => entry.type === 'directory' && entry.name === part);
-      if (!directory) break;
-      valid.push(part);
-      entries = directory.children || [];
-    }
-    this.#path = valid;
+  set path(value) {
+    this.#path = Array.isArray(value) ? [...value] : [];
     this.#render();
-    this.#emit('octopus:navigate', { path: this.path, entries: this.#currentEntries() });
   }
 
-  #currentEntries() {
-    return this.#path.reduce((entries, part) =>
-      entries.find((entry) => entry.type === 'directory' && entry.name === part)?.children || [],
-    this.#entries);
-  }
+  get path() { return [...this.#path]; }
 
   #emit(name, detail) {
     this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail }));
   }
 
   #open(entry) {
-    if (entry.parent) return this.navigate(this.#path.slice(0, -1));
-    if (entry.type === 'directory') return this.navigate([...this.#path, entry.name]);
+    if (entry.parent) return this.#emit('octopus:navigate', { path: this.#path.slice(0, -1) });
+    if (entry.type === 'directory') return this.#emit('octopus:navigate', { path: [...this.#path, entry.name] });
     this.#emit('octopus:open', { entry, path: [...this.#path, entry.name] });
   }
 
@@ -96,7 +81,7 @@ export class OctopusFileBrowser extends HTMLElementBase {
     style.textContent = styles;
     const list = element('ul', 'list');
     list.setAttribute('aria-label', 'Files');
-    const entries = sortEntries(this.#currentEntries());
+    const entries = sortEntries(this.#entries);
     if (this.#path.length) list.append(this.#renderEntry({ name: '..', type: 'directory', parent: true }));
     if (entries.length) entries.forEach((entry) => list.append(this.#renderEntry(entry)));
     else list.append(element('li', 'empty', this.getAttribute('empty-label') || 'This folder is empty.'));
@@ -110,6 +95,7 @@ if (globalThis.customElements && !customElements.get('octopus-file-browser'))
 export function createOctopusFileBrowser(target, options = {}) {
   const browser = document.createElement('octopus-file-browser');
   if (options.emptyLabel) browser.setAttribute('empty-label', options.emptyLabel);
+  browser.path = options.path || [];
   browser.entries = options.entries || [];
   target.append(browser);
   return browser;

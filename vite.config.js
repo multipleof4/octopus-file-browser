@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 const VIRTUAL_ID = 'virtual:octopus-repo-tree';
 const RESOLVED_ID = `\0${VIRTUAL_ID}`;
-const ignored = new Set(['.git', 'demo', 'dist', 'node_modules']);
+const ignored = new Set(['.claude', '.git', '.npmrc', 'demo', 'dist', 'node_modules']);
 
 function scan(directory) {
   return readdirSync(directory, { withFileTypes: true })
