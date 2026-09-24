@@ -1,10 +1,8 @@
 import './demo.css';
-import { formatFileSize } from './octopus-file-browser.js';
+import './octopus-file-browser.js';
 import tree from 'virtual:octopus-repo-tree';
 
 const browser = document.querySelector('octopus-file-browser');
-const status = document.querySelector('.demo-status');
-const say = (text) => { status.textContent = text; };
 const pathText = (path) => `/${path.join('/')}`;
 const isDirectory = (entry) => entry.type === 'directory';
 
@@ -34,41 +32,27 @@ browser.contextMenu = [
     when: isDirectory,
     action: (entry, path) => {
       const name = prompt(`New folder in ${pathText(path)}`)?.trim();
-      if (!name) return;
-      directory(path).push({ name, type: 'directory', modified: new Date().toISOString(), children: [] });
-      say(`Created ${pathText([...path, name])}`);
+      if (name) directory(path).push({ name, type: 'directory', modified: new Date().toISOString(), children: [] });
     },
   },
   {
     label: 'Download',
     when: (entry) => entry.type === 'file',
-    action: (entry, path) => say(`"Download" on ${pathText(path)} (${formatFileSize(entry.size)})`),
+    action: (entry, path) => console.log('Download', pathText(path)),
   },
   {
     label: 'Validate JSON',
     when: (entry) => entry.type === 'file' && entry.name.toLowerCase().endsWith('.json'),
-    action: (entry, path) => say(`"Validate JSON" on ${pathText(path)}`),
+    action: (entry, path) => console.log('Validate JSON', pathText(path)),
   },
-  {
-    label: 'Copy path',
-    action: async (entry, path) => {
-      try {
-        await navigator.clipboard.writeText(pathText(path));
-        say(`Copied ${pathText(path)}`);
-      } catch {
-        say(`Could not copy ${pathText(path)}`);
-      }
-    },
-  },
+  { label: 'Copy path', action: (entry, path) => navigator.clipboard?.writeText(pathText(path)).catch(() => {}) },
   {
     label: 'Rename…',
     action: (entry, path) => {
       const name = prompt(`Rename ${entry.name}`, entry.name)?.trim();
-      if (!name || name === entry.name) return;
-      if (list(browser.path).some((sibling) => sibling.name === name)) return say(`${name} already exists`);
+      if (!name || name === entry.name || list(browser.path).some((sibling) => sibling.name === name)) return;
       stored(path).name = name;
       browser.entries = list(browser.path);
-      say(`Renamed ${pathText(path)} to ${name}`);
     },
   },
   {
@@ -79,12 +63,10 @@ browser.contextMenu = [
       const siblings = directory(path.slice(0, -1));
       siblings.splice(siblings.indexOf(stored(path)), 1);
       browser.entries = list(browser.path);
-      say(`Deleted ${pathText(path)}`);
     },
   },
 ];
 
 browser.addEventListener('octopus:navigate', ({ detail }) => show(detail.path));
-browser.addEventListener('octopus:open', ({ detail }) => say(`Opened ${pathText(detail.path)}`));
 
 show([]);

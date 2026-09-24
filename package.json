@@ -1,6 +1,6 @@
 {
   "name": "octopus-file-browser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A compact, framework-free file browser inspired by Gitea's repository view.",
   "type": "module",
   "main": "./dist/octopus-file-browser.umd.cjs",
@@ -42,7 +42,9 @@
   "homepage": "https://github.com/multipleof4/octopus-file-browser#readme",
   "bugs": "https://github.com/multipleof4/octopus-file-browser/issues",
   "funding": "https://github.com/sponsors/multipleof4",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "material-icon-theme": "5.38.1",
     "vite": "8.3.0"

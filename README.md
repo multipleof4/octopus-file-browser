@@ -58,11 +58,35 @@ Directories are sorted before files. Names use natural, case-insensitive sorting
 | --- | --- |
 | `browser.entries` | Gets or replaces the current directory's entries. |
 | `browser.path` | Gets or sets the current directory path, for example `['home', 'ubuntu']`. `..` is shown when it is not empty. |
+| `browser.contextMenu` | Gets or sets the context menu items. Empty by default. |
 | `empty-label` | Attribute controlling the empty-directory message. |
 | `octopus:open` | Event with `{ entry, path }` when a file is selected. |
 | `octopus:navigate` | Event with `{ path }` when a directory or `..` is selected. The browser does not change until your app sets `path` and `entries`. |
 
 The package also exports `OctopusFileBrowser`, `createOctopusFileBrowser`, `sortEntries`, `formatFileSize`, `formatRelativeDate`, `isRecent`, and `fileKindLabel`. Type declarations are included.
+
+## Context menu
+
+The context menu is off until you set items. Right-click, the Menu key, or a touch long press on a file or directory opens it.
+
+```js
+browser.contextMenu = [
+  { label: 'Copy path', action: (entry, path) => navigator.clipboard.writeText('/' + path.join('/')) },
+  { label: 'New folder…', when: (entry) => entry.type === 'directory', action: (entry, path) => createFolder(path) },
+  { label: 'Download', when: (entry) => entry.type === 'file', action: (entry, path) => download(path) },
+  { label: 'Validate JSON', when: (entry) => entry.name.endsWith('.json'), action: (entry, path) => validate(path) },
+  { label: 'Delete', danger: true, action: (entry, path) => remove(path) },
+];
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | Menu item text. |
+| `action` | `(entry, path) => void` | Called when the item is selected. |
+| `when` | `(entry, path) => boolean` | Optional. Shows the item only for entries it returns `true` for. Items without `when` show for every entry. |
+| `danger` | `boolean` | Optional. Styles the item as destructive. |
+
+Items appear in the order given. When no item matches an entry, the native context menu is shown instead.
 
 ## Theme
 
@@ -77,6 +101,7 @@ octopus-file-browser {
   --ofb-hover: #f6f8fa;
   --ofb-focus: #0969da;
   --ofb-recent: #d15700;
+  --ofb-danger: #cf222e;
 }
 ```
 
